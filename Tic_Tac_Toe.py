@@ -20,7 +20,6 @@ else:
     print("Invalid character, please enter 'X' or 'O'")
 
 
-
 def check_space(current_player, board):
     while True:
         place_char = input("Where would you like to enter your symbol 1-9 ")
@@ -84,6 +83,7 @@ def check_winner(board):
         print("Its a tie")
         return True
 
+
 def change_player(current_player, board):
 
     if current_player == player_1:
@@ -115,12 +115,8 @@ def main():
             else:
                 break
 
-
         current_player = change_player(current_player, board)
-
 
 
 if __name__=="__main__":
     main()
-
-
