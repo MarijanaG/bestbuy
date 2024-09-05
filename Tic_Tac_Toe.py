@@ -95,6 +95,7 @@ def change_player(current_player, board):
 
 
 def main():
+    print("This is the best game that we ever made ")
     board = [["-", "-", "-", ],
              ["-", "-", "-", ],
              ["-", "-", "-"]]
