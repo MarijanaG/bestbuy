@@ -95,6 +95,7 @@ def change_player(current_player, board):
 
 
 def main():
+    print("Lets put some color on a code")
     print("Xhefri schange is here")
     board = [["-", "-", "-", ],
              ["-", "-", "-", ],
