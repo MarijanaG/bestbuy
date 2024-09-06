@@ -96,6 +96,7 @@ def change_player(current_player, board):
 
 def main():
     print("This is the best game that we ever made ")
+    print("This is a print just to check myself if im dumb as it seems")
     board = [["-", "-", "-", ],
              ["-", "-", "-", ],
              ["-", "-", "-"]]
