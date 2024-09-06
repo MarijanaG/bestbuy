@@ -99,7 +99,7 @@ def main():
     print("marijana change too")
     print("now line 100 belongs to lydia")
     print("Xhefri changed line 100 again :)))")
-    print("same time change")
+    print("enough printing messages here-xh:)")
     board = [["-", "-", "-", ],
              ["-", "-", "-", ],
              ["-", "-", "-"]]
