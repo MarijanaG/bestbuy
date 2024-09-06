@@ -98,6 +98,7 @@ def main():
     print("Lets put some color on a code")
     print("now line 100 belongs to lydia")
     print("Xhefri changed line 100 again :)))")
+    pritn("Marijana")
 
     board = [["-", "-", "-", ],
              ["-", "-", "-", ],
