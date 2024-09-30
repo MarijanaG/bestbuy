@@ -17,7 +17,7 @@ class Product:
             self.deactivate()
 
     def is_active(self):
-        self.active = True
+        return self.active
 
     def activate(self):
         self.active = True
@@ -35,15 +35,9 @@ class Product:
         self.quantity -= quantity
         return self.price * quantity
 
+
 try:
     product = Product("Laptop", 1200, 5)
     print(product)
 except ValueError as e:
     print(f"Error: {e}")
-
-
-class Store:
-    pass
-
-
-
