@@ -1,5 +1,6 @@
 from datetime import datetime
 
+
 class Product:
     def __init__(self, name, price, quantity):
         if not name or price < 0 or quantity < 0:
@@ -12,6 +13,10 @@ class Product:
 
     def __str__(self):
         return f"{self.name} (Quantity: {self.quantity}, Price: ${self.price})"
+
+    def set_promotion(self, promotion):
+        """Set a promotion for the product."""
+        self.promotion = promotion
 
     def get_quantity(self):
         """get current quantity of products"""
@@ -57,6 +62,15 @@ except ValueError as e:
     print(f"Error: {e}")
 
 
+class NonStockedProduct(Product):
+    def __init__(self, name, price):
+        # Call the parent class's constructor, setting quantity to 0
+        super().__init__(name, price, quantity=0)
+
+    def show(self):
+        return f"{self.name} (Price: ${self.price}, Non-stocked) - {self.promotions.name if self.promotions else 'No promotion'}"
+
+
 class DigitalProduct(Product):
     def __init__(self, name, price):
         """Digital products don't have a limit on quantity."""
@@ -65,6 +79,21 @@ class DigitalProduct(Product):
     def show(self):
         """Show product with special characteristics for digital products"""
         return f"Digital Product - Name: {self.name}, Price: {self.price} (Unlimited Quantity)"
+
+
+class LimitedProduct(Product):
+    def __init__(self, name, price, quantity, maximum):
+        super().__init__(name, price, quantity)
+        self.maximum = maximum
+
+    def show(self):
+        promo_info = f"Promotion: {self.promotions.name}" if self.promotions else "No promotion"
+        return f"{self.name} (Price: ${self.price}, Quantity: {self.quantity}, Max: {self.maximum}) - {promo_info}"
+
+    def buy(self, quantity):
+        if quantity > self.maximum:
+            raise Exception(f"Cannot buy more than {self.maximum} of {self.name}.")
+        return super().buy(quantity)
 
 
 class PerishableProduct(Product):
@@ -83,3 +112,5 @@ class PerishableProduct(Product):
         expired_status = "Expired" if self.is_expired() else "Fresh"
         return (f"Perishable Product - Name: {self.name}, Price: {self.price}, "
                 f"Quantity: {self.quantity}, Expiration Date: {self.expiration_date} ({expired_status})")
+
+
