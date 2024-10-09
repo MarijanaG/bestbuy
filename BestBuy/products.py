@@ -1,3 +1,5 @@
+from datetime import datetime
+
 class Product:
     def __init__(self, name, price, quantity):
         if not name or price < 0 or quantity < 0:
@@ -53,3 +55,31 @@ try:
     print(product)
 except ValueError as e:
     print(f"Error: {e}")
+
+
+class DigitalProduct(Product):
+    def __init__(self, name, price):
+        """Digital products don't have a limit on quantity."""
+        super().__init__(name, price, float('inf'))
+
+    def show(self):
+        """Show product with special characteristics for digital products"""
+        return f"Digital Product - Name: {self.name}, Price: {self.price} (Unlimited Quantity)"
+
+
+class PerishableProduct(Product):
+    def __init__(self, name, price, quantity, expiration_date):
+        """Perishable products have an expiration date"""
+        super().__init__(name, price, quantity)
+        self.expiration_date = expiration_date
+
+    def is_expired(self):
+        """Check if the product is expired"""
+        today = datetime.today().date()
+        return today > self.expiration_date
+
+    def show(self):
+        """Show product with special characteristics for perishable products"""
+        expired_status = "Expired" if self.is_expired() else "Fresh"
+        return (f"Perishable Product - Name: {self.name}, Price: {self.price}, "
+                f"Quantity: {self.quantity}, Expiration Date: {self.expiration_date} ({expired_status})")
