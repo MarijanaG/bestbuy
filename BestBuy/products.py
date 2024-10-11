@@ -3,13 +3,14 @@ from datetime import datetime
 
 class Product:
     def __init__(self, name, price, quantity):
-        if not name or price < 0 or quantity < 0:
+        if not name or (price is None or price < 0) or (quantity is not None and quantity < 0):
             raise ValueError("Invalid product details.")
 
         self.name = name
         self.price = price
         self.quantity = quantity
         self.active = True
+        self.promotion = None
 
     def __str__(self):
         return f"{self.name} (Quantity: {self.quantity}, Price: ${self.price})"
@@ -17,6 +18,11 @@ class Product:
     def set_promotion(self, promotion):
         """Set a promotion for the product."""
         self.promotion = promotion
+
+    def show(self):
+        """Product presentation name, price, quantity, and promotion."""
+        promotion_info = f" (Promotion: {self.promotion.name})" if self.promotion else " (No promotion)"
+        return f'Name: {self.name}, Price: ${self.price}, Quantity: {self.quantity}{promotion_info}'
 
     def get_quantity(self):
         """get current quantity of products"""
@@ -45,14 +51,12 @@ class Product:
         return f'Name: {self.name}, Price: {self.price}, Quantity: {self.quantity}'
 
     def buy(self, quantity):
-        """purchase quantity of the product"""
-        if quantity > self.quantity:
-            raise Exception("Not enough quantity available.")
-
-        self.quantity -= quantity
-        if self.quantity == 0:
-            self.deactivate()
-        return self.price * quantity
+        if self.quantity is not None and quantity <= self.quantity:
+            self.quantity -= quantity  # Deduct the purchased amount
+            total_cost = self.price * quantity
+            return total_cost
+        else:
+            raise ValueError(f"Not enough {self.name} available or product is not in stock.")
 
 
 try:
@@ -65,10 +69,10 @@ except ValueError as e:
 class NonStockedProduct(Product):
     def __init__(self, name, price):
         # Call the parent class's constructor, setting quantity to 0
-        super().__init__(name, price, quantity=0)
+        super().__init__(name, price, None)
 
     def show(self):
-        return f"{self.name} (Price: ${self.price}, Non-stocked) - {self.promotions.name if self.promotions else 'No promotion'}"
+        return f"{self.name} (Price: ${self.price}, Non-stocked) - {self.promotion.name if self.promotion else 'No promotion'}"
 
 
 class DigitalProduct(Product):
@@ -87,7 +91,7 @@ class LimitedProduct(Product):
         self.maximum = maximum
 
     def show(self):
-        promo_info = f"Promotion: {self.promotions.name}" if self.promotions else "No promotion"
+        promo_info = f"Promotion: {self.promotion.name}" if self.promotion else "No promotion"
         return f"{self.name} (Price: ${self.price}, Quantity: {self.quantity}, Max: {self.maximum}) - {promo_info}"
 
     def buy(self, quantity):
@@ -112,5 +116,3 @@ class PerishableProduct(Product):
         expired_status = "Expired" if self.is_expired() else "Fresh"
         return (f"Perishable Product - Name: {self.name}, Price: {self.price}, "
                 f"Quantity: {self.quantity}, Expiration Date: {self.expiration_date} ({expired_status})")
-
-

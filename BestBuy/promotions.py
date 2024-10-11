@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from products import Product
 
+
 # Promotion Abstract Base Class
 class Promotion(ABC):
     def __init__(self, name):
@@ -49,7 +50,6 @@ class NonStockedProduct(Product):
 
     def show(self):
         return f"{self.name} (Price: ${self.price}, Non-stocked) - {self.promotion.name if self.promotion else 'No promotion'}"
-
 
 
 class LimitedProduct(Product):

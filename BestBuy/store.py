@@ -1,3 +1,4 @@
+from products import DigitalProduct, NonStockedProduct
 class Store:
 
     def __init__(self):
@@ -15,8 +16,12 @@ class Store:
         self.products.remove(product)
 
     def get_total_quantity(self):
-        #getting total quantity
-        total_quantity = sum( product.get_quantity() for product in self.products )
+        total_quantity = 0
+        for product in self.products:
+            if isinstance(product, DigitalProduct) or isinstance(product, NonStockedProduct):
+                # Skip products with unlimited or no stock
+                continue
+            total_quantity += product.get_quantity()
         return total_quantity
 
     def get_all_products(self):
