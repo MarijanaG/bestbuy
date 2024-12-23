@@ -5,7 +5,9 @@ from datetime import date
 
 
 def create_default_inventory():
-    """Stock of inventory with new product types"""
+    """Creates a default inventory of products for the store,
+    including regular, digital, perishable, non-stocked, and limited products.
+    """
     product_list = [
         products.Product("MacBook Air M2", price=1450, quantity=100),  # Regular Product
         products.Product("Bose QuietComfort Earbuds", price=250, quantity=500),  # Regular Product
@@ -28,6 +30,9 @@ def create_default_inventory():
 
 
 def start(store: Store):
+    """Starts the store menu and allows the user to interact with the store,
+        including listing products, viewing the total amount of inventory,
+        making an order, and checking promotions."""
     while True:
         print("Welcome to our store")
         print("1. List all products in store")
@@ -65,9 +70,12 @@ def start(store: Store):
                         if quantity <= 0:
                             print("Quantity must be a positive integer.")
                             continue
+
                         if quantity > product.get_quantity():
                             print(f"Not enough {product.name} available. Current quantity: {product.get_quantity()}.")
                             continue
+                        shopping_list.append((product, quantity))
+
                         shopping_list.append((product, quantity))
                     except ValueError:
                         print("Please enter a valid integer for quantity.")
@@ -95,7 +103,10 @@ def start(store: Store):
             print("Invalid choice, please try again.")
 
 
-if __name__ == "__main__":
+def main():
+    """Main function to initialize the store, add default inventory,
+        and start the store menu.
+    """
     store = Store()
     default_inventory = create_default_inventory()
 
@@ -105,3 +116,7 @@ if __name__ == "__main__":
 
     # Start the menu
     start(store)
+
+
+if __name__ == "__main__":
+    main()
