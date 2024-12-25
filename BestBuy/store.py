@@ -45,13 +45,14 @@ class Store:
         for product, quantity in shopping_list:
             if product in self.products and product.is_active():
                 try:
-                    total_price += product.buy(quantity)
+                    total_price += product.buy(quantity)  # Ensure buy() is called only once
                 except Exception as e:
                     print(f"Error buying product: {e}")
             else:
                 print(f"Product {product.name} is not available or not active.")
 
         return total_price
+
 
 
 

@@ -12,8 +12,8 @@ class Promotion(ABC):
 
     @abstractmethod
     def apply_promotion(self, product, quantity):
-        """ Abstract method that must be implemented in subclasses to apply the promotion to a given product and quantity."""
-        pass
+        # Default behavior: no promotion, just regular price
+        return product.price * quantity
 
 
 class PercentageDiscount(Promotion):
@@ -45,17 +45,14 @@ class SecondItemHalfPrice(Promotion):
 
 
 class BuyTwoGetOneFree(Promotion):
-    """Represents a promotion where the third item is free when buying two items.
-       For every three items purchased, one item is free."""
     def __init__(self, name):
-        """Initializes the BuyTwoGetOneFree class with a promotion name."""
         super().__init__(name)
 
     def apply_promotion(self, product, quantity):
-        """Applies the Buy Two Get One Free promotion to the given quantity of the product."""
-        paid_items = quantity - (quantity // 3)  # For every 3 items, one is free
-        return paid_items * product.price
-
+        free_items = quantity // 3
+        paid_items = quantity - free_items
+        total_cost = paid_items * product.price
+        return total_cost, free_items
 
 class NonStockedProduct(Product):
     """Represents a non-stocked product, which cannot be added to a store's inventory."""

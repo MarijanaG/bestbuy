@@ -51,12 +51,17 @@ class Product:
         """deactivating the product"""
         self.active = False
 
-
     def buy(self, quantity):
         """Buys a specified quantity of the product, deducting from the stock and calculating the total cost."""
-        if self.quantity is not None and quantity <= self.quantity:
+        if self.quantity >= quantity:
             self.quantity -= quantity  # Deduct the purchased amount
             total_cost = self.price * quantity
+
+            # Apply promotion if available
+            if self.promotion:
+                total_cost, free_items = self.promotion.apply_promotion(self, quantity)
+                if free_items > 0:
+                    print(f"You get {free_items} free item(s) with this promotion!")
             return total_cost
         else:
             raise ValueError(f"Not enough {self.name} available or product is not in stock.")
@@ -73,7 +78,7 @@ class NonStockedProduct(Product):
     """Represents a product that is not stocked (e.g., digital products or back-order items)."""
     def __init__(self, name, price):
         """Initializes a non-stocked product with the given name and price."""
-        super().__init__(name, price, None)
+        super().__init__(name, price, 0)
 
     def show(self):
         """Returns a description of the non-stocked product, including its name, price, and promotion status.
@@ -86,7 +91,7 @@ class DigitalProduct(Product):
 """
     def __init__(self, name, price):
         """Initializes a digital product with the provided name and price."""
-        super().__init__(name, price, float('inf'))
+        super().__init__(name, price, None)
 
     def show(self):
         """Returns a description of the digital product, emphasizing its unlimited quantity."""

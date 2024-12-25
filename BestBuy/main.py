@@ -75,8 +75,6 @@ def start(store: Store):
                             print(f"Not enough {product.name} available. Current quantity: {product.get_quantity()}.")
                             continue
                         shopping_list.append((product, quantity))
-
-                        shopping_list.append((product, quantity))
                     except ValueError:
                         print("Please enter a valid integer for quantity.")
                 else:
