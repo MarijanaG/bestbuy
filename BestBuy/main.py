@@ -18,13 +18,15 @@ def create_default_inventory():
         products.LimitedProduct("Shipping", price=10, quantity=250, maximum=1)  # Limited Product
     ]
 
+    # Define promotions
     second_half_price = promotions.SecondItemHalfPrice("Second Half price!")
     third_one_free = promotions.BuyTwoGetOneFree("Third One Free!")
     thirty_percent = promotions.PercentageDiscount("30% off!", percentage=30)
 
-    product_list[0].set_promotion(second_half_price)
-    product_list[1].set_promotion(third_one_free)
-    product_list[3].set_promotion(thirty_percent)
+    # Apply promotions to products
+    product_list[0].set_promotion(second_half_price)  # MacBook Air M2 gets second item half price
+    product_list[1].set_promotion(third_one_free)  # Bose QuietComfort Earbuds get third one free
+    product_list[3].set_promotion(thirty_percent)  # E-Book gets 30% discount
 
     return product_list
 
@@ -44,19 +46,23 @@ def start(store: Store):
         user_choice = input("Please enter your choice: ")
 
         if user_choice == "1":
+            # List all products in the store
             available_products = store.get_all_products()
             if available_products:
                 print("Available products:")
                 for available_product in available_products:
-                    print(available_product.show())
+                    promotion_info = available_product.promotion.name if available_product.promotion else "No promotion"
+                    print(f"{available_product.show()} - Promotion: {promotion_info}")
             else:
                 print("No active products available")
 
         elif user_choice == "2":
+            # Show total quantity of products in the store
             total_amount = store.get_total_quantity()
-            print(f"Total amount of quantity is {total_amount}")
+            print(f"Total quantity of all products: {total_amount}")
 
         elif user_choice == "3":
+            # Process an order
             shopping_list = []
             while True:
                 product_name = input("Please enter the product name, or write 'done' to finish: ")
@@ -66,7 +72,7 @@ def start(store: Store):
 
                 if product:
                     try:
-                        quantity = int(input("Enter quantity: "))
+                        quantity = int(input(f"Enter quantity for {product.name}: "))
                         if quantity <= 0:
                             print("Quantity must be a positive integer.")
                             continue
@@ -74,20 +80,25 @@ def start(store: Store):
                         if quantity > product.get_quantity():
                             print(f"Not enough {product.name} available. Current quantity: {product.get_quantity()}.")
                             continue
+
                         shopping_list.append((product, quantity))
                     except ValueError:
                         print("Please enter a valid integer for quantity.")
                 else:
                     print(f"Product '{product_name}' not found in store.")
 
+            # Display order summary and apply promotions
+            total_cost = 0
             for purchased_product, quantity in shopping_list:
                 try:
-                    total_cost = purchased_product.buy(quantity)
-                    print(f"Purchased {quantity} of {purchased_product.name}. Total cost: ${total_cost}.")
+                    total_cost += purchased_product.buy(quantity)
+                    print(f"Purchased {quantity} of {purchased_product.name}.")
                 except Exception as e:
                     print(f"Error purchasing {quantity} of {purchased_product.name}: {e}")
+            print(f"Total order cost: ${total_cost}")
 
         elif user_choice == "4":
+            # List all promotions for products
             print("Available promotions:")
             for product in store.get_all_products():
                 promotion_info = product.promotion.name if product.promotion else "No promotion"

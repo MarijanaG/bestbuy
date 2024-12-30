@@ -24,9 +24,11 @@ class PercentageDiscount(Promotion):
         self.percentage = percentage
 
     def apply_promotion(self, product, quantity):
-        """Applies the percentage discount to a product and calculates the total cost for the given quantity."""
-        discount = product.price * (self.percentage / 100)
-        return (product.price - discount) * quantity
+        """Apply the percentage discount to the product's total price."""
+        total_cost = product.price * quantity
+        discount_amount = total_cost * (self.percentage / 100)
+        total_cost -= discount_amount
+        return total_cost
 
 
 class SecondItemHalfPrice(Promotion):
@@ -38,10 +40,13 @@ class SecondItemHalfPrice(Promotion):
         super().__init__(name)
 
     def apply_promotion(self, product, quantity):
-        """Applies the second item half price promotion to the given quantity of the product."""
-        full_price_items = quantity // 2 + quantity % 2  # Full price for half of the quantity
-        half_price_items = quantity // 2  # Half price for the second half
-        return (full_price_items * product.price) + (half_price_items * product.price * 0.5)
+        """Apply the 'second product half price' promotion."""
+        if quantity >= 2:
+            total_cost = product.price + product.price * (quantity - 1) * 0.5
+        else:
+            total_cost = product.price * quantity
+
+        return total_cost
 
 
 class BuyTwoGetOneFree(Promotion):
@@ -50,9 +55,9 @@ class BuyTwoGetOneFree(Promotion):
 
     def apply_promotion(self, product, quantity):
         free_items = quantity // 3
-        paid_items = quantity - free_items
-        total_cost = paid_items * product.price
-        return total_cost, free_items
+        total_cost = product.price * (quantity - free_items)
+        return total_cost
+
 
 class NonStockedProduct(Product):
     """Represents a non-stocked product, which cannot be added to a store's inventory."""

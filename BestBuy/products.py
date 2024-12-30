@@ -52,26 +52,21 @@ class Product:
         self.active = False
 
     def buy(self, quantity):
-        """Buys a specified quantity of the product, deducting from the stock and calculating the total cost."""
-        if self.quantity >= quantity:
-            self.quantity -= quantity  # Deduct the purchased amount
+        """Handles purchasing a product."""
+        if self.quantity is not None and self.quantity < quantity:
+            raise ValueError(f"Not enough {self.name} in stock. Available: {self.quantity}.")
+
+        if self.promotion:
+            # The promotion calculates the total cost
+            total_cost = self.promotion.apply_promotion(self, quantity)
+        else:
+            # No promotion, regular pricing
             total_cost = self.price * quantity
 
-            # Apply promotion if available
-            if self.promotion:
-                total_cost, free_items = self.promotion.apply_promotion(self, quantity)
-                if free_items > 0:
-                    print(f"You get {free_items} free item(s) with this promotion!")
-            return total_cost
-        else:
-            raise ValueError(f"Not enough {self.name} available or product is not in stock.")
+        if self.quantity is not None:
+            self.quantity -= quantity
 
-
-try:
-    product = Product("Laptop", 1200, 5)
-    print(product)
-except ValueError as e:
-    print(f"Error: {e}")
+        return total_cost
 
 
 class NonStockedProduct(Product):
@@ -90,8 +85,10 @@ class DigitalProduct(Product):
     """Represents a digital product that has no limits on quantity (i.e., an infinite stock).
 """
     def __init__(self, name, price):
-        """Initializes a digital product with the provided name and price."""
-        super().__init__(name, price, None)
+        super().__init__(name, price, quantity=None)
+
+    def get_quantity(self):
+        return float('inf')
 
     def show(self):
         """Returns a description of the digital product, emphasizing its unlimited quantity."""
